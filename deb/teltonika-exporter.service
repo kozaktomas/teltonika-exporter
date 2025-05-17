@@ -1,0 +1,15 @@
+[Unit]
+Description=Teltonika Exporter
+Documentation=https://github.com/kozaktomas/teltonika-exporter
+After=network.target
+
+[Service]
+User=teltonika-exporter
+ExecStart=/usr/bin/teltonika-exporter --config /etc/teltonika-exporter/config.yaml
+ExecReload=/usr/bin/env kill -HUP $MAINPID
+Restart=always
+WorkingDirectory=/var/lib/teltonika-exporter
+TimeoutStopSec=20s
+
+[Install]
+WantedBy=default.target

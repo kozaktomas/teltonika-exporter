@@ -1,0 +1,41 @@
+# Example configuration file for the Teltonika exporter
+# Collect field supports multiple values, make sure that your device supports it
+# You can check it here: https://developers.teltonika-networks.com/
+## - `system` - system information - `/system/device/usage/status`
+## - `modem` - 4g/5g modem information - `/modems/status`
+## - `wireless` - wireless client information - `/wireless/interfaces/status`
+## - `dhcp` - dhcp information - `/dhcp/leases/ipv[46]/status`
+
+devices:
+  - name: "RUTX50"                          # device name used in instance label (optional - host is used by default)
+    schema: "https"                         # scraping schema (optional - https is used by default)
+    host: "192.168.1.1"                     # device IP address
+    timeout: "5s"                           # timeout for scraping (optional - 10s is used by default)
+    username: "admin"                       # device username
+    password: "admin"                       # device password
+    scrapeInterval: "30s"                   # scraping interval (optional - 60s is used by default)
+    collect: [ "system", "modem", "dhcp" ]  # list of metrics to collect - check the list above
+
+  # You can monitor multiple devices by adding more entries to the device list.
+  - name: "TAP200"
+    schema: "https"
+    host: "192.168.1.101"
+    timeout: "5s"
+    username: "admin"
+    password: "admin"
+    scrapeInterval: "30s"
+    collect: [ "system", "wireless" ]
+
+# translate device mac address to human-readable name in the metric labels
+# mac address is case-insensitive
+# optional
+#mac_translations:
+#  "aa:bb:cc:00:11:33": "jonny_phone"
+#  "84:48:aa:a7:11:66": "tv_living_room"
+
+# translate device radio to human-readable name
+# optional
+#radio_translations:
+#  "radio0": "2.4GHz"
+#  "radio1": "5GHz"
+

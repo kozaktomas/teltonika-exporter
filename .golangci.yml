@@ -1,0 +1,149 @@
+version: "2"
+linters:
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    #    - canonicalheader
+    #    - containedctx
+    - contextcheck
+    - copyloopvar
+    #    - cyclop
+    - decorder
+    #    - depguard
+    - dogsled
+    - dupl
+    - dupword
+    - durationcheck
+    #    - err113
+    #    - errcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    #    - exhaustruct
+    - exptostd
+    - fatcontext
+    #    - forbidigo
+    - forcetypeassert
+    #    - funcorder
+    #    - funlen
+    - ginkgolinter
+    - gocheckcompilerdirectives
+#    - gochecknoglobals
+#    - gochecknoinits
+    - gochecksumtype
+    #    - gocognit
+    #    - goconst
+    - gocritic
+    - gocyclo
+    #    - godot
+    - godox
+    - goheader
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosmopolitan
+    - govet
+    - grouper
+    - iface
+    - importas
+    - inamedparam
+    - ineffassign
+    #    - interfacebloat
+    #    - intrange
+    #    - ireturn
+    #    - lll
+    - loggercheck
+    - maintidx
+    #    - makezero
+    - mirror
+    - misspell
+    #    - mnd
+    - musttag
+    - nakedret
+    #    - nestif
+    - nilerr
+    - nilnesserr
+    - nilnil
+    #    - nlreturn
+    #    - noctx
+    #    - nolintlint
+    #    - nonamedreturns
+    - nosprintfhostport
+    #    - paralleltest
+    #    - perfsprint
+    - prealloc
+    - predeclared
+    - promlinter
+    - protogetter
+    - reassign
+    - recvcheck
+    #    - revive
+    - rowserrcheck
+    - sloglint
+    - spancheck
+    - sqlclosecheck
+    #    - staticcheck
+    - tagalign
+    #    - tagliatelle
+    - testableexamples
+    - testifylint
+    #    - testpackage
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - unused
+    - usestdlibvars
+    - usetesting
+    #    - varnamelen
+    - wastedassign
+    #    - whitespace
+    #    - wrapcheck
+    #    - wsl
+    - zerologlint
+
+linters-settings:
+  # I'm biased and I'm enabling more than 100 checks
+  # Might be too much for you. See https://go-critic.com/overview.html
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      # These 3 will detect many cases, but they do sense
+      # if it's performance oriented code
+      - hugeParam
+      - rangeExprCopy
+      - rangeValCopy
+
+  errcheck:
+    # Report `a := b.(MyStruct)` when `a, ok := ...` should be.
+    check-type-assertions: true # Default: false
+
+    # Report skipped checks:`num, _ := strconv.Atoi(numStr)`.
+    check-blank: true # Default: false
+
+    # Function to skip.
+    exclude-functions:
+      - io/ioutil.ReadFile
+      - io.Copy(*bytes.Buffer)
+      - io.Copy(os.Stdout)
+
+  govet:
+    disable:
+      - fieldalignment # I'm ok to waste some bytes
+
+  nakedret:
+    max-func-lines: 1 # Default: 30
+
+issues:
+  exclude:
+    - "singleCaseSwitch"
+    - "sprintfQuotedString"

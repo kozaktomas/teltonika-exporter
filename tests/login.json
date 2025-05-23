@@ -1,0 +1,8 @@
+{
+  "success": true,
+  "data": {
+    "username": "admin",
+    "token": "secret_token",
+    "expires": 299
+  }
+}

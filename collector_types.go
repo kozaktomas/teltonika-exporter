@@ -64,6 +64,7 @@ type WirelessInterfacesStatusResponse struct {
 	Data    []struct {
 		Disabled bool   `json:"disabled"`
 		Status   string `json:"status"`
+		Up       bool   `json:"up"`
 		Devices  []struct {
 			IfName         string `json:"ifname"`
 			Device         string `json:"device"`

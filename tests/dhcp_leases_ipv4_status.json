@@ -1,0 +1,24 @@
+{
+  "success": true,
+  "data": [
+    {
+      "expires": 37423,
+      "ipaddr": "192.168.1.121",
+      "hostname": "iPhone",
+      "macaddr": "AA:AA:AA:AA:8D:9C",
+      "interface": "lan"
+    },
+    {
+      "expires": 30897,
+      "ipaddr": "192.168.1.144",
+      "macaddr": "AA:AA:AA:AA:BF:AB",
+      "interface": "lan"
+    },
+    {
+      "expires": 28534,
+      "ipaddr": "192.168.1.214",
+      "macaddr": "AA:AA:AA:AA:3C:82",
+      "interface": "lan"
+    }
+  ]
+}

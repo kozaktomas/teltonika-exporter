@@ -1,0 +1,31 @@
+{
+  "success": true,
+  "data": [
+    {
+      "expires": 42881,
+      "ipv6addr": [
+        "bbbb:aaaa:102:aaaa::11",
+        "aaaa:bbbb:afe4::11"
+      ],
+      "hostname": "TAP200",
+      "ipv6prefix": [
+        {
+          "prefix_length": 62,
+          "address": "aaaa:bb4:afe4:4::"
+        }
+      ],
+      "duid": "dudyTAP200",
+      "interface": "lan"
+    },
+    {
+      "expires": 40463,
+      "ipv6addr": [
+        "bbbb:aaaa:102:bbbb::1fa",
+        "aaaa:bbbb:bbba::1fa"
+      ],
+      "hostname": "my--iPhone",
+      "duid": "duddyfound",
+      "interface": "lan"
+    }
+  ]
+}

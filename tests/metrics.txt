@@ -1,0 +1,114 @@
+# HELP teltonika_cpu_usage CPU usage over 1 minute
+# TYPE teltonika_cpu_usage gauge
+teltonika_cpu_usage{device="RUT007"} 0.1949685534591195
+# HELP teltonika_device_uptime Device uptime
+# TYPE teltonika_device_uptime gauge
+teltonika_device_uptime{device="RUT007"} 217360
+# HELP teltonika_dhcp_leases_ipv4 Count of active DHCP IPv4 leases
+# TYPE teltonika_dhcp_leases_ipv4 gauge
+teltonika_dhcp_leases_ipv4{device="RUT007"} 3
+# HELP teltonika_dhcp_leases_ipv6 Count of active DHCP IPv6 leases
+# TYPE teltonika_dhcp_leases_ipv6 gauge
+teltonika_dhcp_leases_ipv6{device="RUT007"} 2
+# HELP teltonika_flash_free Amount of free flash memory
+# TYPE teltonika_flash_free gauge
+teltonika_flash_free{device="RUT007"} 8.488e+07
+# HELP teltonika_flash_total Total amount of flash memory
+# TYPE teltonika_flash_total gauge
+teltonika_flash_total{device="RUT007"} 8.578e+07
+# HELP teltonika_flash_used Amount of used flash memory
+# TYPE teltonika_flash_used gauge
+teltonika_flash_used{device="RUT007"} 900000
+# HELP teltonika_load_min_1 CPU load average over the last minute
+# TYPE teltonika_load_min_1 gauge
+teltonika_load_min_1{device="RUT007"} 0.42481116960402837
+# HELP teltonika_load_min_15 CPU load average over the last 15 minutes
+# TYPE teltonika_load_min_15 gauge
+teltonika_load_min_15{device="RUT007"} 0.19336232547493706
+# HELP teltonika_load_min_5 CPU load average over the last 5 minutes
+# TYPE teltonika_load_min_5 gauge
+teltonika_load_min_5{device="RUT007"} 0.31738765545128556
+# HELP teltonika_mobile_connected Mobile network connected 1/0
+# TYPE teltonika_mobile_connected gauge
+teltonika_mobile_connected{device="RUT007",sim="2-1"} 1
+# HELP teltonika_mobile_data_received Received data in bytes
+# TYPE teltonika_mobile_data_received gauge
+teltonika_mobile_data_received{device="RUT007",sim="2-1"} 4.5844315341e+10
+# HELP teltonika_mobile_data_sent Sent data in bytes
+# TYPE teltonika_mobile_data_sent gauge
+teltonika_mobile_data_sent{device="RUT007",sim="2-1"} 1.658175509e+09
+# HELP teltonika_mobile_rsrp RSRP value in dBm
+# TYPE teltonika_mobile_rsrp gauge
+teltonika_mobile_rsrp{device="RUT007",sim="2-1"} -83
+# HELP teltonika_mobile_rsrq RSRQ value in dB
+# TYPE teltonika_mobile_rsrq gauge
+teltonika_mobile_rsrq{device="RUT007",sim="2-1"} -10
+# HELP teltonika_mobile_signal_strength Mobile signal strength
+# TYPE teltonika_mobile_signal_strength gauge
+teltonika_mobile_signal_strength{device="RUT007",sim="2-1"} -56
+# HELP teltonika_mobile_sinr SINR value in dB
+# TYPE teltonika_mobile_sinr gauge
+teltonika_mobile_sinr{device="RUT007",sim="2-1"} 9
+# HELP teltonika_mobile_temperature Modem temperature in Celsius
+# TYPE teltonika_mobile_temperature gauge
+teltonika_mobile_temperature{device="RUT007",sim="2-1"} 38
+# HELP teltonika_ram_buffered Amount of buffered system memory
+# TYPE teltonika_ram_buffered gauge
+teltonika_ram_buffered{device="RUT007"} 50000
+# HELP teltonika_ram_free Amount of free system memory
+# TYPE teltonika_ram_free gauge
+teltonika_ram_free{device="RUT007"} 1.3618e+08
+# HELP teltonika_ram_total Total amount of system memory
+# TYPE teltonika_ram_total gauge
+teltonika_ram_total{device="RUT007"} 2.4108e+08
+# HELP teltonika_ram_used Amount of used system memory
+# TYPE teltonika_ram_used gauge
+teltonika_ram_used{device="RUT007"} 1.049e+08
+# HELP teltonika_wireless_client_noise Wireless client noise level in dBm
+# TYPE teltonika_wireless_client_noise gauge
+teltonika_wireless_client_noise{client="AA:BB:CC:DD:00:11",device="RUT007",radio="radio1"} -88
+teltonika_wireless_client_noise{client="iphone",device="RUT007",radio="wifi_2.4"} -70
+# HELP teltonika_wireless_client_rx_rate Wireless client receive rate in bps
+# TYPE teltonika_wireless_client_rx_rate gauge
+teltonika_wireless_client_rx_rate{client="AA:BB:CC:DD:00:11",device="RUT007",radio="radio1"} 2.4e+07
+teltonika_wireless_client_rx_rate{client="iphone",device="RUT007",radio="wifi_2.4"} 2.5e+07
+# HELP teltonika_wireless_client_signal Wireless client signal strength in dBm
+# TYPE teltonika_wireless_client_signal gauge
+teltonika_wireless_client_signal{client="AA:BB:CC:DD:00:11",device="RUT007",radio="radio1"} -53
+teltonika_wireless_client_signal{client="iphone",device="RUT007",radio="wifi_2.4"} -73
+# HELP teltonika_wireless_client_tx_rate Wireless client transmit rate in bps
+# TYPE teltonika_wireless_client_tx_rate gauge
+teltonika_wireless_client_tx_rate{client="AA:BB:CC:DD:00:11",device="RUT007",radio="radio1"} 5.85e+08
+teltonika_wireless_client_tx_rate{client="iphone",device="RUT007",radio="wifi_2.4"} 9e+07
+# HELP teltonika_wireless_device_airtime_time Total airtime duration for the wireless device
+# TYPE teltonika_wireless_device_airtime_time gauge
+teltonika_wireless_device_airtime_time{device="RUT007",interface="wlan0-1",radio="wifi_2.4"} 2.7481657e+08
+teltonika_wireless_device_airtime_time{device="RUT007",interface="wlan1-1",radio="radio1"} 2.74817648e+08
+# HELP teltonika_wireless_device_airtime_time_busy Duration of busy airtime for the wireless device
+# TYPE teltonika_wireless_device_airtime_time_busy gauge
+teltonika_wireless_device_airtime_time_busy{device="RUT007",interface="wlan0-1",radio="wifi_2.4"} 2.209566e+07
+teltonika_wireless_device_airtime_time_busy{device="RUT007",interface="wlan1-1",radio="radio1"} 3.7969218e+07
+# HELP teltonika_wireless_device_airtime_utilization Percentage of time the wireless device is actively transmitting or receiving data
+# TYPE teltonika_wireless_device_airtime_utilization gauge
+teltonika_wireless_device_airtime_utilization{device="RUT007",interface="wlan0-1",radio="wifi_2.4"} 6
+teltonika_wireless_device_airtime_utilization{device="RUT007",interface="wlan1-1",radio="radio1"} 33
+# HELP teltonika_wireless_device_bitrate Wireless device bitrate
+# TYPE teltonika_wireless_device_bitrate gauge
+teltonika_wireless_device_bitrate{device="RUT007",interface="wlan0-1",radio="wifi_2.4"} 6e+06
+teltonika_wireless_device_bitrate{device="RUT007",interface="wlan1-1",radio="radio1"} 2.97e+08
+# HELP teltonika_wireless_device_noise Wireless device noise level in dBm
+# TYPE teltonika_wireless_device_noise gauge
+teltonika_wireless_device_noise{device="RUT007",interface="wlan0-1",radio="wifi_2.4"} -92
+teltonika_wireless_device_noise{device="RUT007",interface="wlan1-1",radio="radio1"} -88
+# HELP teltonika_wireless_device_op_class Wireless device operating class
+# TYPE teltonika_wireless_device_op_class gauge
+teltonika_wireless_device_op_class{device="RUT007",interface="wlan0-1",radio="wifi_2.4"} 81
+teltonika_wireless_device_op_class{device="RUT007",interface="wlan1-1",radio="radio1"} 128
+# HELP teltonika_wireless_device_quality Wireless device quality
+# TYPE teltonika_wireless_device_quality gauge
+teltonika_wireless_device_quality{device="RUT007",interface="wlan0-1",radio="wifi_2.4"} 54
+teltonika_wireless_device_quality{device="RUT007",interface="wlan1-1",radio="radio1"} 62
+# HELP teltonika_wireless_device_signal Wireless device signal strength in dBm
+# TYPE teltonika_wireless_device_signal gauge
+teltonika_wireless_device_signal{device="RUT007",interface="wlan0-1",radio="wifi_2.4"} -72
+teltonika_wireless_device_signal{device="RUT007",interface="wlan1-1",radio="radio1"} -66

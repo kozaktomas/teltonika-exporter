@@ -2,275 +2,253 @@ package main
 
 import "github.com/prometheus/client_golang/prometheus"
 
-// Monitor represents a Prometheus monitor
-// It contains Prometheus registry and all available metrics
-type Monitor struct {
-	Registry *prometheus.Registry
+type Metrics map[string]*prometheus.Desc
 
-	DeviceUptime *prometheus.GaugeVec
-	CpuUsage     *prometheus.GaugeVec
-	LoadMin1     *prometheus.GaugeVec
-	LoadMin5     *prometheus.GaugeVec
-	LoadMin15    *prometheus.GaugeVec
-	RamTotal     *prometheus.GaugeVec
-	RamUsed      *prometheus.GaugeVec
-	RamFree      *prometheus.GaugeVec
-	RamBuffered  *prometheus.GaugeVec
-	FlashTotal   *prometheus.GaugeVec
-	FlashUsed    *prometheus.GaugeVec
-	FlashFree    *prometheus.GaugeVec
-
-	DhcpLeasesIPv4 *prometheus.GaugeVec
-	DhcpLeasesIPv6 *prometheus.GaugeVec
-
-	MobileConnected   *prometheus.GaugeVec
-	MobileSignal      *prometheus.GaugeVec
-	MobileSinr        *prometheus.GaugeVec
-	MobileRsrp        *prometheus.GaugeVec
-	MobileRsrq        *prometheus.GaugeVec
-	MobileSent        *prometheus.GaugeVec
-	MobileReceived    *prometheus.GaugeVec
-	MobileTemperature *prometheus.GaugeVec
-
-	WirelessDeviceQuality            *prometheus.GaugeVec
-	WirelessDeviceBitrate            *prometheus.GaugeVec
-	WirelessDeviceOpClass            *prometheus.GaugeVec
-	WirelessDeviceAirtimeTimeBusy    *prometheus.GaugeVec
-	WirelessDeviceAirtimeTime        *prometheus.GaugeVec
-	WirelessDeviceAirtimeUtilization *prometheus.GaugeVec
-	WirelessDeviceNoise              *prometheus.GaugeVec
-	WirelessDeviceSignal             *prometheus.GaugeVec
-
-	WirelessClientTxRate *prometheus.GaugeVec
-	WirelessClientRxRate *prometheus.GaugeVec
-	WirelessClientSignal *prometheus.GaugeVec
-	WirelessClientNoise  *prometheus.GaugeVec
-}
-
-// NewMonitor creates a new Monitor
-func NewMonitor() *Monitor {
-	reg := prometheus.NewRegistry()
+func NewMetrics() Metrics {
 	generalLabels := []string{"device"}
 	mobileLabels := []string{"device", "sim"}
 	wirelessClientLabels := []string{"device", "client", "radio"}
 	wirelessDeviceLabels := []string{"device", "interface", "radio"}
 
-	monitor := &Monitor{
-		Registry: reg,
+	return map[string]*prometheus.Desc{
+		"teltonika_device_uptime": prometheus.NewDesc(
+			"teltonika_device_uptime",
+			"Device uptime",
+			generalLabels,
+			nil,
+		),
 
-		DeviceUptime: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_device_uptime",
-			Help: "Device uptime",
-		}, generalLabels),
+		"teltonika_cpu_usage": prometheus.NewDesc(
+			"teltonika_cpu_usage",
+			"CPU usage over 1 minute",
+			generalLabels,
+			nil,
+		),
 
-		CpuUsage: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_cpu_usage",
-			Help: "CPU usage over 1 minute",
-		}, generalLabels),
+		"teltonika_load_min_1": prometheus.NewDesc(
+			"teltonika_load_min_1",
+			"CPU load average over the last minute",
+			generalLabels,
+			nil,
+		),
 
-		LoadMin1: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_load_min_1",
-			Help: "CPU load average over the last minute",
-		}, generalLabels),
+		"teltonika_load_min_5": prometheus.NewDesc(
+			"teltonika_load_min_5",
+			"CPU load average over the last 5 minutes",
+			generalLabels,
+			nil,
+		),
 
-		LoadMin5: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_load_min_5",
-			Help: "CPU load average over the last 5 minutes",
-		}, generalLabels),
-
-		LoadMin15: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_load_min_15",
-			Help: "CPU load average over the last 15 minutes",
-		}, generalLabels),
-
-		//nolint:promlinter
-		RamTotal: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_ram_total",
-			Help: "Total amount of system memory",
-		}, generalLabels),
-
-		RamUsed: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_ram_used",
-			Help: "Amount of used system memory",
-		}, generalLabels),
-
-		RamFree: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_ram_free",
-			Help: "Amount of free system memory",
-		}, generalLabels),
-
-		RamBuffered: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_ram_buffered",
-			Help: "Amount of buffered system memory",
-		}, generalLabels),
+		"teltonika_load_min_15": prometheus.NewDesc(
+			"teltonika_load_min_15",
+			"CPU load average over the last 15 minutes",
+			generalLabels,
+			nil,
+		),
 
 		//nolint:promlinter
-		FlashTotal: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_flash_total",
-			Help: "Total amount of flash memory",
-		}, generalLabels),
+		"teltonika_ram_total": prometheus.NewDesc(
+			"teltonika_ram_total",
+			"Total amount of system memory",
+			generalLabels,
+			nil,
+		),
 
-		FlashUsed: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_flash_used",
-			Help: "Amount of used flash memory",
-		}, generalLabels),
+		"teltonika_ram_used": prometheus.NewDesc(
+			"teltonika_ram_used",
+			"Amount of used system memory",
+			generalLabels,
+			nil,
+		),
 
-		FlashFree: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_flash_free",
-			Help: "Amount of free flash memory",
-		}, generalLabels),
+		"teltonika_ram_free": prometheus.NewDesc(
+			"teltonika_ram_free",
+			"Amount of free system memory",
+			generalLabels,
+			nil,
+		),
 
-		DhcpLeasesIPv4: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_dhcp_leases_ipv4",
-			Help: "Count of active DHCP IPv4 leases",
-		}, generalLabels),
+		"teltonika_ram_buffered": prometheus.NewDesc(
+			"teltonika_ram_buffered",
+			"Amount of buffered system memory",
+			generalLabels,
+			nil,
+		),
 
-		DhcpLeasesIPv6: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_dhcp_leases_ipv6",
-			Help: "Count of active DHCP IPv6 leases",
-		}, generalLabels),
+		//nolint:promlinter
+		"teltonika_flash_total": prometheus.NewDesc(
+			"teltonika_flash_total",
+			"Total amount of flash memory",
+			generalLabels,
+			nil,
+		),
 
-		MobileConnected: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_mobile_connected",
-			Help: "Mobile network connected 1/0",
-		}, mobileLabels),
+		"teltonika_flash_used": prometheus.NewDesc(
+			"teltonika_flash_used",
+			"Amount of used flash memory",
+			generalLabels,
+			nil,
+		),
 
-		MobileSignal: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_mobile_signal_strength",
-			Help: "Mobile signal strength",
-		}, mobileLabels),
+		"teltonika_flash_free": prometheus.NewDesc(
+			"teltonika_flash_free",
+			"Amount of free flash memory",
+			generalLabels,
+			nil,
+		),
 
-		MobileSinr: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_mobile_sinr",
-			Help: "SINR value in dB",
-		}, mobileLabels),
+		"teltonika_dhcp_leases_ipv4": prometheus.NewDesc(
+			"teltonika_dhcp_leases_ipv4",
+			"Count of active DHCP IPv4 leases",
+			generalLabels,
+			nil,
+		),
 
-		MobileRsrp: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_mobile_rsrp",
-			Help: "RSRP value in dBm",
-		}, mobileLabels),
+		"teltonika_dhcp_leases_ipv6": prometheus.NewDesc(
+			"teltonika_dhcp_leases_ipv6",
+			"Count of active DHCP IPv6 leases",
+			generalLabels,
+			nil,
+		),
 
-		MobileRsrq: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_mobile_rsrq",
-			Help: "RSRQ value in dB",
-		}, mobileLabels),
+		"teltonika_mobile_connected": prometheus.NewDesc(
+			"teltonika_mobile_connected",
+			"Mobile network connected 1/0",
+			mobileLabels,
+			nil,
+		),
 
-		MobileSent: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_mobile_data_sent",
-			Help: "Sent data in bytes",
-		}, mobileLabels),
+		"teltonika_mobile_signal_strength": prometheus.NewDesc(
+			"teltonika_mobile_signal_strength",
+			"Mobile signal strength",
+			mobileLabels,
+			nil,
+		),
 
-		MobileReceived: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_mobile_data_received",
-			Help: "Received data in bytes",
-		}, mobileLabels),
+		"teltonika_mobile_sinr": prometheus.NewDesc(
+			"teltonika_mobile_sinr",
+			"SINR value in dB",
+			mobileLabels,
+			nil,
+		),
 
-		MobileTemperature: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_mobile_temperature",
-			Help: "Modem temperature in Celsius",
-		}, mobileLabels),
+		"teltonika_mobile_rsrp": prometheus.NewDesc(
+			"teltonika_mobile_rsrp",
+			"RSRP value in dBm",
+			mobileLabels,
+			nil,
+		),
 
-		WirelessDeviceQuality: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_device_quality",
-			Help: "Wireless device quality",
-		}, wirelessDeviceLabels),
+		"teltonika_mobile_rsrq": prometheus.NewDesc(
+			"teltonika_mobile_rsrq",
+			"RSRQ value in dB",
+			mobileLabels,
+			nil,
+		),
 
-		WirelessDeviceBitrate: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_device_bitrate",
-			Help: "Wireless device bitrate",
-		}, wirelessDeviceLabels),
+		"teltonika_mobile_data_sent": prometheus.NewDesc(
+			"teltonika_mobile_data_sent",
+			"Sent data in bytes",
+			mobileLabels,
+			nil,
+		),
 
-		WirelessDeviceOpClass: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_device_op_class",
-			Help: "Wireless device operating class",
-		}, wirelessDeviceLabels),
+		"teltonika_mobile_data_received": prometheus.NewDesc(
+			"teltonika_mobile_data_received",
+			"Received data in bytes",
+			mobileLabels,
+			nil,
+		),
 
-		WirelessDeviceAirtimeTimeBusy: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_device_airtime_time_busy",
-			Help: "Duration of busy airtime for the wireless device",
-		}, wirelessDeviceLabels),
+		"teltonika_mobile_temperature": prometheus.NewDesc(
+			"teltonika_mobile_temperature",
+			"Modem temperature in Celsius",
+			mobileLabels,
+			nil,
+		),
 
-		WirelessDeviceAirtimeTime: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_device_airtime_time",
-			Help: "Total airtime duration for the wireless device",
-		}, wirelessDeviceLabels),
+		"teltonika_wireless_device_quality": prometheus.NewDesc(
+			"teltonika_wireless_device_quality",
+			"Wireless device quality",
+			wirelessDeviceLabels,
+			nil,
+		),
 
-		WirelessDeviceAirtimeUtilization: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_device_airtime_utilization",
-			Help: "Percentage of time the wireless device is actively transmitting or receiving data",
-		}, wirelessDeviceLabels),
+		"teltonika_wireless_device_bitrate": prometheus.NewDesc(
+			"teltonika_wireless_device_bitrate",
+			"Wireless device bitrate",
+			wirelessDeviceLabels,
+			nil,
+		),
 
-		WirelessDeviceNoise: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_device_noise",
-			Help: "Wireless device noise level in dBm",
-		}, wirelessDeviceLabels),
+		"teltonika_wireless_device_op_class": prometheus.NewDesc(
+			"teltonika_wireless_device_op_class",
+			"Wireless device operating class",
+			wirelessDeviceLabels,
+			nil,
+		),
 
-		WirelessDeviceSignal: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_device_signal",
-			Help: "Wireless device signal strength in dBm",
-		}, wirelessDeviceLabels),
+		"teltonika_wireless_device_airtime_time_busy": prometheus.NewDesc(
+			"teltonika_wireless_device_airtime_time_busy",
+			"Duration of busy airtime for the wireless device",
+			wirelessDeviceLabels,
+			nil,
+		),
 
-		WirelessClientTxRate: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_client_tx_rate",
-			Help: "Wireless client transmit rate in bps",
-		}, wirelessClientLabels),
+		"teltonika_wireless_device_airtime_time": prometheus.NewDesc(
+			"teltonika_wireless_device_airtime_time",
+			"Total airtime duration for the wireless device",
+			wirelessDeviceLabels,
+			nil,
+		),
 
-		WirelessClientRxRate: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_client_rx_rate",
-			Help: "Wireless client receive rate in bps",
-		}, wirelessClientLabels),
+		"teltonika_wireless_device_airtime_utilization": prometheus.NewDesc(
+			"teltonika_wireless_device_airtime_utilization",
+			"Percentage of time the wireless device is actively transmitting or receiving data",
+			wirelessDeviceLabels,
+			nil,
+		),
 
-		WirelessClientSignal: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_client_signal",
-			Help: "Wireless client signal strength in dBm",
-		}, wirelessClientLabels),
+		"teltonika_wireless_device_noise": prometheus.NewDesc(
+			"teltonika_wireless_device_noise",
+			"Wireless device noise level in dBm",
+			wirelessDeviceLabels,
+			nil,
+		),
 
-		WirelessClientNoise: prometheus.NewGaugeVec(prometheus.GaugeOpts{
-			Name: "teltonika_wireless_client_noise",
-			Help: "Wireless client noise level in dBm",
-		}, wirelessClientLabels),
+		"teltonika_wireless_device_signal": prometheus.NewDesc(
+			"teltonika_wireless_device_signal",
+			"Wireless device signal strength in dBm",
+			wirelessDeviceLabels,
+			nil,
+		),
+
+		"teltonika_wireless_client_tx_rate": prometheus.NewDesc(
+			"teltonika_wireless_client_tx_rate",
+			"Wireless client transmit rate in bps",
+			wirelessClientLabels,
+			nil,
+		),
+
+		"teltonika_wireless_client_rx_rate": prometheus.NewDesc(
+			"teltonika_wireless_client_rx_rate",
+			"Wireless client receive rate in bps",
+			wirelessClientLabels,
+			nil,
+		),
+
+		"teltonika_wireless_client_signal": prometheus.NewDesc(
+			"teltonika_wireless_client_signal",
+			"Wireless client signal strength in dBm",
+			wirelessClientLabels,
+			nil,
+		),
+
+		"teltonika_wireless_client_noise": prometheus.NewDesc(
+			"teltonika_wireless_client_noise",
+			"Wireless client noise level in dBm",
+			wirelessClientLabels,
+			nil,
+		),
 	}
-
-	reg.MustRegister(
-		monitor.DeviceUptime,
-		monitor.CpuUsage,
-		monitor.LoadMin1,
-		monitor.LoadMin5,
-		monitor.LoadMin15,
-		monitor.RamTotal,
-		monitor.RamUsed,
-		monitor.RamFree,
-		monitor.RamBuffered,
-		monitor.FlashTotal,
-		monitor.FlashUsed,
-		monitor.FlashFree,
-
-		monitor.DhcpLeasesIPv4,
-		monitor.DhcpLeasesIPv6,
-
-		monitor.MobileConnected,
-		monitor.MobileSignal,
-		monitor.MobileSinr,
-		monitor.MobileRsrp,
-		monitor.MobileRsrq,
-		monitor.MobileSent,
-		monitor.MobileReceived,
-		monitor.MobileTemperature,
-
-		monitor.WirelessDeviceQuality,
-		monitor.WirelessDeviceBitrate,
-		monitor.WirelessDeviceOpClass,
-		monitor.WirelessDeviceAirtimeTimeBusy,
-		monitor.WirelessDeviceAirtimeTime,
-		monitor.WirelessDeviceAirtimeUtilization,
-		monitor.WirelessDeviceNoise,
-		monitor.WirelessDeviceSignal,
-
-		monitor.WirelessClientTxRate,
-		monitor.WirelessClientRxRate,
-		monitor.WirelessClientSignal,
-		monitor.WirelessClientNoise,
-	)
-
-	return monitor
 }

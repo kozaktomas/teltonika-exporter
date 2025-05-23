@@ -11,6 +11,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ var root = cobra.Command{
 		signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 		defer signal.Stop(done)
 
-		ctx, cancel := context.WithCancel(context.Background())
+		_, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
 		if configFile == "" {
@@ -42,19 +43,16 @@ var root = cobra.Command{
 			return fmt.Errorf("error parsing config file: %w", err)
 		}
 
-		monitor, err := Run(ctx, config)
-		if err != nil {
-			return fmt.Errorf("error creating collector: %w", err)
-		}
+		metrics := NewMetrics()
+		teltonikaCollector := NewCollector(config, metrics)
 
-		if err != nil {
-			return fmt.Errorf("failed to collect data: %w", err)
-		}
+		registry := prometheus.NewRegistry()
+		registry.MustRegister(teltonikaCollector)
 
-		http.Handle("/metrics", promhttp.HandlerFor(monitor.Registry,
+		http.Handle("/metrics", promhttp.HandlerFor(registry,
 			promhttp.HandlerOpts{
 				EnableOpenMetrics: true,
-				Registry:          monitor.Registry,
+				Registry:          registry,
 			}),
 		)
 

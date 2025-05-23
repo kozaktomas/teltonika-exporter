@@ -1,0 +1,247 @@
+{
+  "success": true,
+  "data": [
+    {
+      "ifname": [
+        "wlan0-1",
+        "wlan1-1"
+      ],
+      "disabled": false,
+      "op_class": 128,
+      "status": "1",
+      "quality": 54,
+      "noise": -92,
+      "up": true,
+      "device": [
+        {
+          "device": "radio0",
+          "pending": false,
+          "name": "MediaTek MT7615E 802.11b\/g\/n Wireless Controller (radio0)",
+          "up": true
+        },
+        {
+          "device": "radio1",
+          "pending": false,
+          "name": "MediaTek MT7615E 802.11ac\/n Wireless Controller (radio1)",
+          "up": true
+        }
+      ],
+      "txpoweroff": 0,
+      "rrm": {
+        "neighbor_report_tx": 182
+      },
+      "bitrate": 6000000,
+      "name": "ap \"Kozakovi\"",
+      "airtime": {
+        "time_busy": 37969218,
+        "time": 274817648,
+        "utilization": 33
+      },
+      "frequency": "2.437",
+      "encryption": "WPA2 PSK (TKIP, CCMP)",
+      "bssid": "44:AA:77:AA:35:AA",
+      "devices": [
+        {
+          "ifname": "wlan0-1",
+          "up": true,
+          "beacon_interval": 100,
+          "bssid": "20:97:27:5B:35:04",
+          "bss_color": -1,
+          "rrm": {
+            "neighbor_report_tx": 509
+          },
+          "bitrate": 6000000,
+          "quality": 54,
+          "name": "radio0",
+          "op_class": 81,
+          "airtime": {
+            "time_busy": 22095660,
+            "time": 274816570,
+            "utilization": 6
+          },
+          "wnm": {
+            "bss_transition_request_tx": 0,
+            "bss_transition_response_rx": 0,
+            "bss_transition_query_rx": 0
+          },
+          "noise": -92,
+          "signal": -72
+        },
+        {
+          "ifname": "wlan1-1",
+          "dfs": {
+            "cac_time_left": 0,
+            "cac_time": 0,
+            "cac_active": false
+          },
+          "up": true,
+          "beacon_interval": 100,
+          "bssid": "AA:BB:77:AA:AA:AA",
+          "bss_color": -1,
+          "rrm": {
+            "neighbor_report_tx": 182
+          },
+          "bitrate": 297000000,
+          "quality": 62,
+          "name": "radio1",
+          "op_class": 128,
+          "airtime": {
+            "time_busy": 37969218,
+            "time": 274817648,
+            "utilization": 33
+          },
+          "wnm": {
+            "bss_transition_request_tx": 0,
+            "bss_transition_response_rx": 0,
+            "bss_transition_query_rx": 0
+          },
+          "noise": -88,
+          "signal": -66
+        }
+      ],
+      "num_assoc": 2,
+      "mode": "ap",
+      "freq": 5220,
+      "band": [
+        "2.4GHz",
+        "5GHz"
+      ],
+      "beacon_interval": 100,
+      "ssid": "secret_ssid",
+      "link": "radio1.network1",
+      "assoclist": {
+        "AA:BB:CC:DD:00:11": {
+          "rx_vht": false,
+          "rx_mhz": 20,
+          "tx_short_gi": false,
+          "tx_packets": 2969,
+          "rx_he": false,
+          "rx_packets": 2837,
+          "tx_he": false,
+          "rx_ht": false,
+          "tx_mcs": 7,
+          "noise": -88,
+          "device": "radio1",
+          "tx_rate": 585000000,
+          "inactive": 630,
+          "tx_nss": 2,
+          "tx_ht": false,
+          "tx_mhz": 80,
+          "tx_vht": true,
+          "rx_rate": 24000000,
+          "signal": -53
+        },
+        "14:25:36:AB:AA:44": {
+          "rx_vht": false,
+          "rx_mhz": 20,
+          "tx_short_gi": true,
+          "tx_packets": 698,
+          "rx_he": false,
+          "rx_packets": 768,
+          "tx_he": false,
+          "rx_ht": false,
+          "tx_mcs": 2,
+          "noise": -70,
+          "device": "radio1",
+          "tx_rate": 90000000,
+          "inactive": 10080,
+          "tx_nss": 2,
+          "tx_ht": false,
+          "tx_mhz": 40,
+          "tx_vht": true,
+          "rx_rate": 25000000,
+          "signal": -73
+        }
+      },
+      "phy": "phy1",
+      "wnm": {
+        "bss_transition_request_tx": 0,
+        "bss_transition_response_rx": 0,
+        "bss_transition_query_rx": 0
+      },
+      "country": "CZ",
+      "clients": [
+        {
+          "tx_rate": 6000000,
+          "device": "radio0",
+          "ipaddr": "192.168.1.201",
+          "band": "2.4GHz",
+          "standard": "Wi-Fi 4",
+          "macaddr": "14:25:36:AB:AA:44",
+          "rx_rate": 6000000,
+          "signal": "-72 dBm"
+        },
+        {
+          "tx_rate": 585000000,
+          "device": "radio1",
+          "ipaddr": "192.168.1.249",
+          "band": "5GHz",
+          "standard": "Wi-Fi 5",
+          "macaddr": "AA:BB:CC:DD:00:11",
+          "rx_rate": 24000000,
+          "signal": "-53 dBm"
+        }
+      ],
+      "txpower": 17,
+      "bss_color": -1,
+      "wifi_id": "wifi0",
+      "dfs": {
+        "cac_time_left": 0,
+        "cac_time": 0,
+        "cac_active": false
+      },
+      "channel": 44,
+      "id": "default_radio0",
+      "signal": -72
+    },
+    {
+      "ifname": "wlan1-1",
+      "clients": [],
+      "encryption": "WPA2-PSK",
+      "devices": [
+        {
+          "ifname": "wlan1-1",
+          "up": true,
+          "bitrate": 0,
+          "quality": 0,
+          "name": "radio1",
+          "dfs": {
+            "cac_time_left": 0,
+            "cac_time": 0,
+            "cac_active": false
+          },
+          "noise": 0,
+          "signal": 0
+        }
+      ],
+      "num_assoc": 0,
+      "status": "0",
+      "mode": "ap",
+      "link": "radio1.network2",
+      "quality": 0,
+      "band": "5GHz",
+      "noise": 0,
+      "ssid": "TAP_name",
+      "up": false,
+      "id": "default_radio1",
+      "txpoweroff": 0,
+      "channel": 44,
+      "signal": 0,
+      "bitrate": 0,
+      "txpower": 0,
+      "name": "ap mame",
+      "wifi_id": "wifi1",
+      "dfs": {
+        "cac_time_left": 0,
+        "cac_time": 0,
+        "cac_active": false
+      },
+      "assoclist": [],
+      "device": {
+        "device": "radio1",
+        "name": "MediaTek MT7615E 802.11ac\/n Wireless Controller (radio1)"
+      },
+      "frequency": "5.220"
+    }
+  ]
+}

@@ -35,7 +35,9 @@ func TestDevice_Collect(t *testing.T) {
 			},
 		},
 		token: "",
-		mtx:   sync.Mutex{},
+
+		ctx: t.Context(),
+		mtx: sync.Mutex{},
 	}
 
 	expected, err := os.ReadFile("tests/metrics.txt")

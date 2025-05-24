@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -32,7 +33,9 @@ type Device struct {
 	metrics    Metrics
 	translator *Translator
 	token      string
-	mtx        sync.Mutex
+
+	ctx context.Context
+	mtx sync.Mutex
 }
 
 func (d *Device) Collect(ch chan<- prometheus.Metric) {
@@ -98,7 +101,7 @@ func (d *Device) authenticate() error {
 		return fmt.Errorf("failed to create auth body: %w", err)
 	}
 
-	request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBody))
+	request, err := http.NewRequestWithContext(d.ctx, http.MethodPost, url, bytes.NewReader(requestBody))
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
 	}
@@ -487,7 +490,7 @@ func (d *Device) collectWirelessInterfacesStatus(ch chan<- prometheus.Metric) {
 func (d *Device) get(endpoint, token string, response interface{}) error {
 	slog.Debug("Calling API", "url", d.buildUrl(endpoint))
 
-	request, err := http.NewRequest(http.MethodGet, d.buildUrl(endpoint), nil)
+	request, err := http.NewRequestWithContext(d.ctx, http.MethodGet, d.buildUrl(endpoint), nil)
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
 	}

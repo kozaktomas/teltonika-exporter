@@ -31,7 +31,7 @@ var root = cobra.Command{
 		signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 		defer signal.Stop(done)
 
-		_, cancel := context.WithCancel(context.Background())
+		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
 		if configFile == "" {
@@ -44,7 +44,7 @@ var root = cobra.Command{
 		}
 
 		metrics := NewMetrics()
-		teltonikaCollector := NewCollector(config, metrics)
+		teltonikaCollector := NewCollector(ctx, config, metrics)
 
 		registry := prometheus.NewRegistry()
 		registry.MustRegister(teltonikaCollector)

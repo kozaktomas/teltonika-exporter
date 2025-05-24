@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
 	"net/http"
 	"sync"
@@ -13,7 +14,7 @@ type Collector struct {
 	devices []*Device
 }
 
-func NewCollector(config *Config, metrics Metrics) *Collector {
+func NewCollector(ctx context.Context, config *Config, metrics Metrics) *Collector {
 	devices := make([]*Device, len(config.Devices))
 
 	translator := &Translator{
@@ -42,6 +43,9 @@ func NewCollector(config *Config, metrics Metrics) *Collector {
 			metrics:    metrics,
 			translator: translator,
 			token:      "",
+
+			ctx: ctx,
+			mtx: sync.Mutex{},
 		}
 	}
 

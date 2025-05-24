@@ -85,7 +85,7 @@ func (d *Device) authenticate() error {
 	if d.token != "" {
 		valid, _ := d.checkCurrentToken()
 		if valid {
-			return nil
+			return nil // token is still valid
 		}
 	}
 
@@ -138,49 +138,18 @@ func (d *Device) authenticate() error {
 // checkCurrentToken checks if the current token is still valid.
 // the server prolongs the token if it is still valid.
 func (d *Device) checkCurrentToken() (bool, error) {
-	url := d.buildUrl("/session/status")
-	request, err := http.NewRequest(http.MethodGet, url, nil)
-	if err != nil {
-		return false, fmt.Errorf("failed to create request: %w", err)
-	}
-	request.Header.Set("Authorization", "Bearer "+d.token)
-
-	httpResponse, err := d.client.Do(request)
-	if err != nil {
-		return false, fmt.Errorf("token check request failed: %w", err)
-	}
-	defer func() {
-		if err := httpResponse.Body.Close(); err != nil {
-			slog.Error("failed to close httpResponse body", "error", err)
-		}
-	}()
-
-	if httpResponse.StatusCode != http.StatusOK {
-		return false, nil
+	var status SessionStatusResponse
+	if err := d.get("/session/status", d.token, &status); err != nil {
+		slog.Error("failed to get session status", "error", err)
+		return false, fmt.Errorf("failed to get session status: %w", err)
 	}
 
-	type Output struct {
-		Success bool `json:"success"`
-		Data    struct {
-			Active bool `json:"active"`
-		} `json:"data"`
+	if !status.Success {
+		return false, fmt.Errorf("token check failed")
 	}
 
-	responseBody, err := io.ReadAll(httpResponse.Body)
-	if err != nil {
-		return false, fmt.Errorf("failed to read httpResponse body: %w", err)
-	}
-	var output Output
-	if err := json.Unmarshal(responseBody, &output); err != nil {
-		return false, fmt.Errorf("failed to unmarshal response body: %w", err)
-	}
-
-	if !output.Success {
-		return false, fmt.Errorf("token check failed: %s", string(responseBody))
-	}
-
-	if !output.Data.Active {
-		return false, nil
+	if !status.Data.Active {
+		return false, nil // inactive token
 	}
 
 	return true, nil

@@ -12,6 +12,13 @@ type LoginResponse struct {
 	} `json:"data"`
 }
 
+type SessionStatusResponse struct {
+	Success bool `json:"success"`
+	Data    struct {
+		Active bool `json:"active"`
+	} `json:"data"`
+}
+
 type ModemStatusResponse struct {
 	Success bool `json:"success"`
 	Data    []struct {

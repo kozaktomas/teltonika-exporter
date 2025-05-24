@@ -9,6 +9,7 @@ import (
 )
 
 type Collector struct {
+	metrics Metrics
 	devices []*Device
 }
 
@@ -45,12 +46,15 @@ func NewCollector(config *Config, metrics Metrics) *Collector {
 	}
 
 	return &Collector{
+		metrics: metrics,
 		devices: devices,
 	}
 }
 
 func (cc *Collector) Describe(ch chan<- *prometheus.Desc) {
-	prometheus.DescribeByCollect(cc, ch)
+	for _, m := range cc.metrics {
+		ch <- m
+	}
 }
 
 func (cc *Collector) Collect(ch chan<- prometheus.Metric) {

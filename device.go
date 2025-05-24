@@ -491,7 +491,9 @@ func (d *Device) get(endpoint, token string, response interface{}) error {
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
 	}
+
 	request.Header.Set("Authorization", "Bearer "+token)
+	request.Header.Set("User-Agent", "Teltonika Exporter")
 
 	httpResponse, err := d.client.Do(request)
 	if err != nil {

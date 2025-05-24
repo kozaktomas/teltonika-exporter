@@ -49,6 +49,17 @@ var root = cobra.Command{
 		registry := prometheus.NewRegistry()
 		registry.MustRegister(teltonikaCollector)
 
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			_, _ = w.Write([]byte(`<html>
+			<head><title>Teltonika exporter</title></head>
+			<body>
+				<h1>Teltonika exporter</h1>
+				<p><a href="/metrics">Metrics</a></p>
+			</body>
+			</html>`))
+		})
+
 		http.Handle("/metrics", promhttp.HandlerFor(registry,
 			promhttp.HandlerOpts{
 				EnableOpenMetrics: true,

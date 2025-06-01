@@ -22,10 +22,11 @@ var (
 )
 
 var root = cobra.Command{
-	Use:     "teltonika-exporter [flags] <config_file>",
-	Example: "teltonika-exporter --port 15741",
+	Use:     "teltonika-exporter [flags]",
+	Example: "./teltonika-exporter --config path/to/config.yaml --port 15741",
 	Short:   "Teltonika Exporter for Prometheus",
 	Long:    "A simple exporter for Teltonika devices, exposing metrics to Prometheus.",
+	Args:    cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		done := make(chan os.Signal, 1)
 		signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)

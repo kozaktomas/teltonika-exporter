@@ -31,7 +31,6 @@ devices:
     timeout: "5s"                           # timeout for scraping (optional - 10s is used by default)
     username: "admin"                       # device username
     password: "admin"                       # device password
-    scrapeInterval: "30s"                   # scraping interval (optional - 60s is used by default)
     collect: [ "system", "modem", "dhcp" ]  # list of metrics to collect - check the list above
 ```
 

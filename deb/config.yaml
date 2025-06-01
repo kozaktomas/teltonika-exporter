@@ -13,7 +13,6 @@ devices:
     timeout: "5s"                           # timeout for scraping (optional - 10s is used by default)
     username: "admin"                       # device username
     password: "admin"                       # device password
-    scrapeInterval: "30s"                   # scraping interval (optional - 60s is used by default)
     collect: [ "system", "modem", "dhcp" ]  # list of metrics to collect - check the list above
 
   # You can monitor multiple devices by adding more entries to the device list.
@@ -23,7 +22,6 @@ devices:
     timeout: "5s"
     username: "admin"
     password: "admin"
-    scrapeInterval: "30s"
     collect: [ "system", "wireless" ]
 
 # translate device mac address to human-readable name in the metric labels

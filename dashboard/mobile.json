@@ -1140,10 +1140,6 @@
         "type": "datasource"
       },
       {
-        "current": {
-          "text": "RUTX50",
-          "value": "RUTX50"
-        },
         "definition": "label_values(teltonika_cpu_usage,device)",
         "label": "device",
         "name": "device",

@@ -20,18 +20,58 @@ type SessionStatusResponse struct {
 }
 
 type ModemStatusResponse struct {
-	Success bool `json:"success"`
-	Data    []struct {
-		Sinr        int    `json:"sinr"`
-		Temperature int    `json:"temperature"`
-		Simstate    string `json:"simstate"`
-		Txbytes     int    `json:"txbytes"`
-		Rsrp        int    `json:"rsrp"`
-		Rxbytes     int64  `json:"rxbytes"`
-		Rssi        int    `json:"rssi"`
-		Rsrq        int    `json:"rsrq"`
-		ID          string `json:"id"`
-	} `json:"data"`
+	Success bool          `json:"success"`
+	Data    []ModemStatus `json:"data"`
+}
+
+// ModemStatus is one modem entry of /modems/status. The scalar signal readings
+// (Rsrp, Rsrq, Sinr, Rssi) describe the primary carrier only - on a 5G NSA
+// connection that is the LTE anchor, not the NR leg, whose readings live in
+// CaSignal and CellInfo.
+type ModemStatus struct {
+	Sinr          int            `json:"sinr"`
+	Temperature   int            `json:"temperature"`
+	Simstate      string         `json:"simstate"`
+	Txbytes       int            `json:"txbytes"`
+	Rsrp          int            `json:"rsrp"`
+	Rxbytes       int64          `json:"rxbytes"`
+	Rssi          int            `json:"rssi"`
+	Rsrq          int            `json:"rsrq"`
+	ID            string         `json:"id"`
+	Band          string         `json:"band"`
+	Conntype      string         `json:"conntype"`
+	Ntype         string         `json:"ntype"`
+	Netstate      string         `json:"netstate"`
+	SignalQuality OptionalNumber `json:"signal_quality"`
+	CaSignal      []ModemCarrier `json:"ca_signal"`
+	CellInfo      []ModemCell    `json:"cell_info"`
+}
+
+// ModemCarrier is a single aggregated carrier from ca_signal[]. An NR carrier
+// of a 5G NSA connection typically reports only Band, Frequency and Bandwidth;
+// its radio quality has to be taken from the matching ModemCell.
+type ModemCarrier struct {
+	Band      string         `json:"band"`
+	Primary   bool           `json:"primary"`
+	Frequency OptionalNumber `json:"frequency"`
+	Bandwidth OptionalNumber `json:"bandwidth"`
+	Rsrp      OptionalNumber `json:"rsrp"`
+	Rsrq      OptionalNumber `json:"rsrq"`
+	Sinr      OptionalNumber `json:"sinr"`
+	Rssi      OptionalNumber `json:"rssi"`
+}
+
+// ModemCell is a single cell from cell_info[]. Exactly one of Earfcn (LTE) and
+// NrArfcn (NR) holds a number, the other one is reported as "N/A"; that number
+// is what ties the cell to a ModemCarrier of the same frequency.
+type ModemCell struct {
+	Earfcn    OptionalNumber `json:"earfcn"`
+	NrArfcn   OptionalNumber `json:"nr-arfcn"`
+	Bandwidth OptionalNumber `json:"bandwidth"`
+	Rsrp      OptionalNumber `json:"rsrp"`
+	Rsrq      OptionalNumber `json:"rsrq"`
+	Sinr      OptionalNumber `json:"sinr"`
+	Rssi      OptionalNumber `json:"rssi"`
 }
 
 type SystemDeviceUsageStatusResponse struct {

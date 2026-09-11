@@ -7,6 +7,9 @@ type Metrics map[string]*prometheus.Desc
 func NewMetrics() Metrics {
 	generalLabels := []string{"device"}
 	mobileLabels := []string{"device", "sim"}
+	mobileTypeLabels := []string{"device", "sim", "type"}
+	mobileCarrierLabels := []string{"device", "sim", "band"}
+	mobileCarrierActiveLabels := []string{"device", "sim", "band", "primary"}
 	wirelessClientLabels := []string{"device", "client", "radio"}
 	wirelessDeviceLabels := []string{"device", "interface", "radio"}
 
@@ -120,28 +123,28 @@ func NewMetrics() Metrics {
 
 		"teltonika_mobile_signal_strength": prometheus.NewDesc(
 			"teltonika_mobile_signal_strength",
-			"Mobile signal strength",
+			"Mobile signal strength (primary carrier only)",
 			mobileLabels,
 			nil,
 		),
 
 		"teltonika_mobile_sinr": prometheus.NewDesc(
 			"teltonika_mobile_sinr",
-			"SINR value in dB",
+			"SINR value in dB (primary carrier only)",
 			mobileLabels,
 			nil,
 		),
 
 		"teltonika_mobile_rsrp": prometheus.NewDesc(
 			"teltonika_mobile_rsrp",
-			"RSRP value in dBm",
+			"RSRP value in dBm (primary carrier only)",
 			mobileLabels,
 			nil,
 		),
 
 		"teltonika_mobile_rsrq": prometheus.NewDesc(
 			"teltonika_mobile_rsrq",
-			"RSRQ value in dB",
+			"RSRQ value in dB (primary carrier only)",
 			mobileLabels,
 			nil,
 		),
@@ -164,6 +167,62 @@ func NewMetrics() Metrics {
 			"teltonika_mobile_temperature",
 			"Modem temperature in Celsius",
 			mobileLabels,
+			nil,
+		),
+
+		"teltonika_mobile_signal_quality": prometheus.NewDesc(
+			"teltonika_mobile_signal_quality",
+			"Overall signal quality reported by the modem in percent",
+			mobileLabels,
+			nil,
+		),
+
+		"teltonika_mobile_network_type": prometheus.NewDesc(
+			"teltonika_mobile_network_type",
+			"Mobile network type currently in use - always 1, the type is carried by the type label",
+			mobileTypeLabels,
+			nil,
+		),
+
+		"teltonika_mobile_carrier_active": prometheus.NewDesc(
+			"teltonika_mobile_carrier_active",
+			"Aggregated carrier currently in use - always 1, the series disappears once the carrier is gone",
+			mobileCarrierActiveLabels,
+			nil,
+		),
+
+		"teltonika_mobile_carrier_rsrp": prometheus.NewDesc(
+			"teltonika_mobile_carrier_rsrp",
+			"RSRP value of a single aggregated carrier in dBm",
+			mobileCarrierLabels,
+			nil,
+		),
+
+		"teltonika_mobile_carrier_rsrq": prometheus.NewDesc(
+			"teltonika_mobile_carrier_rsrq",
+			"RSRQ value of a single aggregated carrier in dB",
+			mobileCarrierLabels,
+			nil,
+		),
+
+		"teltonika_mobile_carrier_sinr": prometheus.NewDesc(
+			"teltonika_mobile_carrier_sinr",
+			"SINR value of a single aggregated carrier in dB",
+			mobileCarrierLabels,
+			nil,
+		),
+
+		"teltonika_mobile_carrier_rssi": prometheus.NewDesc(
+			"teltonika_mobile_carrier_rssi",
+			"RSSI value of a single aggregated carrier in dBm",
+			mobileCarrierLabels,
+			nil,
+		),
+
+		"teltonika_mobile_carrier_bandwidth_mhz": prometheus.NewDesc(
+			"teltonika_mobile_carrier_bandwidth_mhz",
+			"Channel bandwidth of a single aggregated carrier in MHz",
+			mobileCarrierLabels,
 			nil,
 		),
 

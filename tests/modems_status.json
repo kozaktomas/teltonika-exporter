@@ -13,7 +13,7 @@
       "sinr": 9,
       "state_id": 1,
       "sim_switch_enabled": false,
-      "conntype": "5G (NSA); VoLTE",
+      "conntype": "5G (NSA)",
       "state": "Connected",
       "temperature": 38,
       "serial": "WTF66QZ1X711748",
@@ -31,7 +31,42 @@
       "nr5g_sa_disabled": false,
       "rsrp": -83,
       "rxbytes": 45844315341,
-      "cell_info": [],
+      "cell_info": [
+        {
+          "sinr": 10,
+          "rsrq": "N/A",
+          "rsrp": "N/A",
+          "pcid": 442,
+          "tac": "25410",
+          "lac": "N/A",
+          "ue_state": 3,
+          "cellid": "233211157",
+          "mnc": "01",
+          "mcc": "230",
+          "arfcn": "N/A",
+          "uarfcn": "N/A",
+          "earfcn": 1579,
+          "nr-arfcn": "N/A",
+          "bandwidth": "20"
+        },
+        {
+          "sinr": 15,
+          "rsrq": -10,
+          "rsrp": -105,
+          "pcid": 556,
+          "tac": "N/A",
+          "lac": "N/A",
+          "ue_state": 3,
+          "cellid": "233211157",
+          "mnc": "01",
+          "mcc": "230",
+          "arfcn": "N/A",
+          "uarfcn": "N/A",
+          "earfcn": "N/A",
+          "nr-arfcn": 635232,
+          "bandwidth": "100"
+        }
+      ],
       "mobile_stage": 19,
       "data_conn_state_id": 1,
       "oper": "O2.CZ",
@@ -52,13 +87,42 @@
       "rsrq": -10,
       "provider": "O2.HU",
       "data_conn_state": "Connected",
-      "ca_signal": [],
+      "ca_signal": [
+        {
+          "sinr": 10,
+          "rsrq": -17,
+          "rsrp": -94,
+          "pcid": 442,
+          "rssi": -54,
+          "band": "LTE B3",
+          "primary": true,
+          "frequency": 1579,
+          "bandwidth": "20"
+        },
+        {
+          "sinr": 7,
+          "rsrq": -10,
+          "rsrp": -77,
+          "pcid": 417,
+          "rssi": -59,
+          "band": "LTE B20",
+          "primary": false,
+          "frequency": 6200,
+          "bandwidth": "10"
+        },
+        {
+          "bandwidth": "100",
+          "primary": false,
+          "frequency": 635232,
+          "band": "5G N78"
+        }
+      ],
       "baudrate": 115200,
       "multi_apn": true,
       "pinstate_id": 1,
       "framed_routing": true,
-      "band": "5G N3",
-      "lac": "N\/A",
+      "band": "LTE B3",
+      "lac": "N/A",
       "operator_state_id": 1,
       "sc_band_av": "Active",
       "auto_5g_mode": false,
@@ -72,7 +136,8 @@
       "no_ussd": false,
       "auto_3g_bands": false,
       "volte": true,
-      "signal": -56
+      "signal": -56,
+      "signal_quality": 40
     }
   ]
 }

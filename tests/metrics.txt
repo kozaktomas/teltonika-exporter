@@ -28,6 +28,35 @@ teltonika_load_min_15{device="RUT007"} 0.19336232547493706
 # HELP teltonika_load_min_5 CPU load average over the last 5 minutes
 # TYPE teltonika_load_min_5 gauge
 teltonika_load_min_5{device="RUT007"} 0.31738765545128556
+# HELP teltonika_mobile_carrier_active Aggregated carrier currently in use - always 1, the series disappears once the carrier is gone
+# TYPE teltonika_mobile_carrier_active gauge
+teltonika_mobile_carrier_active{band="5G N78",device="RUT007",primary="false",sim="2-1"} 1
+teltonika_mobile_carrier_active{band="LTE B20",device="RUT007",primary="false",sim="2-1"} 1
+teltonika_mobile_carrier_active{band="LTE B3",device="RUT007",primary="true",sim="2-1"} 1
+# HELP teltonika_mobile_carrier_bandwidth_mhz Channel bandwidth of a single aggregated carrier in MHz
+# TYPE teltonika_mobile_carrier_bandwidth_mhz gauge
+teltonika_mobile_carrier_bandwidth_mhz{band="5G N78",device="RUT007",sim="2-1"} 100
+teltonika_mobile_carrier_bandwidth_mhz{band="LTE B20",device="RUT007",sim="2-1"} 10
+teltonika_mobile_carrier_bandwidth_mhz{band="LTE B3",device="RUT007",sim="2-1"} 20
+# HELP teltonika_mobile_carrier_rsrp RSRP value of a single aggregated carrier in dBm
+# TYPE teltonika_mobile_carrier_rsrp gauge
+teltonika_mobile_carrier_rsrp{band="5G N78",device="RUT007",sim="2-1"} -105
+teltonika_mobile_carrier_rsrp{band="LTE B20",device="RUT007",sim="2-1"} -77
+teltonika_mobile_carrier_rsrp{band="LTE B3",device="RUT007",sim="2-1"} -94
+# HELP teltonika_mobile_carrier_rsrq RSRQ value of a single aggregated carrier in dB
+# TYPE teltonika_mobile_carrier_rsrq gauge
+teltonika_mobile_carrier_rsrq{band="5G N78",device="RUT007",sim="2-1"} -10
+teltonika_mobile_carrier_rsrq{band="LTE B20",device="RUT007",sim="2-1"} -10
+teltonika_mobile_carrier_rsrq{band="LTE B3",device="RUT007",sim="2-1"} -17
+# HELP teltonika_mobile_carrier_rssi RSSI value of a single aggregated carrier in dBm
+# TYPE teltonika_mobile_carrier_rssi gauge
+teltonika_mobile_carrier_rssi{band="LTE B20",device="RUT007",sim="2-1"} -59
+teltonika_mobile_carrier_rssi{band="LTE B3",device="RUT007",sim="2-1"} -54
+# HELP teltonika_mobile_carrier_sinr SINR value of a single aggregated carrier in dB
+# TYPE teltonika_mobile_carrier_sinr gauge
+teltonika_mobile_carrier_sinr{band="5G N78",device="RUT007",sim="2-1"} 15
+teltonika_mobile_carrier_sinr{band="LTE B20",device="RUT007",sim="2-1"} 7
+teltonika_mobile_carrier_sinr{band="LTE B3",device="RUT007",sim="2-1"} 10
 # HELP teltonika_mobile_connected Mobile network connected 1/0
 # TYPE teltonika_mobile_connected gauge
 teltonika_mobile_connected{device="RUT007",sim="2-1"} 1
@@ -37,16 +66,22 @@ teltonika_mobile_data_received{device="RUT007",sim="2-1"} 4.5844315341e+10
 # HELP teltonika_mobile_data_sent Sent data in bytes
 # TYPE teltonika_mobile_data_sent gauge
 teltonika_mobile_data_sent{device="RUT007",sim="2-1"} 1.658175509e+09
-# HELP teltonika_mobile_rsrp RSRP value in dBm
+# HELP teltonika_mobile_network_type Mobile network type currently in use - always 1, the type is carried by the type label
+# TYPE teltonika_mobile_network_type gauge
+teltonika_mobile_network_type{device="RUT007",sim="2-1",type="5G-NSA"} 1
+# HELP teltonika_mobile_rsrp RSRP value in dBm (primary carrier only)
 # TYPE teltonika_mobile_rsrp gauge
 teltonika_mobile_rsrp{device="RUT007",sim="2-1"} -83
-# HELP teltonika_mobile_rsrq RSRQ value in dB
+# HELP teltonika_mobile_rsrq RSRQ value in dB (primary carrier only)
 # TYPE teltonika_mobile_rsrq gauge
 teltonika_mobile_rsrq{device="RUT007",sim="2-1"} -10
-# HELP teltonika_mobile_signal_strength Mobile signal strength
+# HELP teltonika_mobile_signal_quality Overall signal quality reported by the modem in percent
+# TYPE teltonika_mobile_signal_quality gauge
+teltonika_mobile_signal_quality{device="RUT007",sim="2-1"} 40
+# HELP teltonika_mobile_signal_strength Mobile signal strength (primary carrier only)
 # TYPE teltonika_mobile_signal_strength gauge
 teltonika_mobile_signal_strength{device="RUT007",sim="2-1"} -56
-# HELP teltonika_mobile_sinr SINR value in dB
+# HELP teltonika_mobile_sinr SINR value in dB (primary carrier only)
 # TYPE teltonika_mobile_sinr gauge
 teltonika_mobile_sinr{device="RUT007",sim="2-1"} 9
 # HELP teltonika_mobile_temperature Modem temperature in Celsius

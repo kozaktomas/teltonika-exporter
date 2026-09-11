@@ -8,6 +8,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -158,6 +159,8 @@ func (d *Device) checkCurrentToken() (bool, error) {
 	return true, nil
 }
 
+// collectModemStatus fetches /modems/status and exports every metric derived
+// from it, for each modem the device reports.
 func (d *Device) collectModemStatus(ch chan<- prometheus.Metric) {
 	var status ModemStatusResponse
 	if err := d.get("/modems/status", d.token, &status); err != nil {
@@ -165,67 +168,202 @@ func (d *Device) collectModemStatus(ch chan<- prometheus.Metric) {
 		return
 	}
 
-	for _, sim := range status.Data {
-		ch <- prometheus.MustNewConstMetric(
-			d.metrics["teltonika_mobile_signal_strength"],
-			prometheus.GaugeValue,
-			float64(sim.Rssi),
-			d.name, sim.ID,
-		)
+	for _, modem := range status.Data {
+		d.exportModemStatus(ch, modem)
+		d.exportModemCarriers(ch, modem)
+	}
+}
 
-		ch <- prometheus.MustNewConstMetric(
-			d.metrics["teltonika_mobile_rsrp"],
-			prometheus.GaugeValue,
-			float64(sim.Rsrp),
-			d.name, sim.ID,
-		)
+// exportModemStatus exports the scalar readings of a single modem. The radio
+// values among them describe the primary carrier only; the remaining carriers
+// are handled by exportModemCarriers.
+func (d *Device) exportModemStatus(ch chan<- prometheus.Metric, modem ModemStatus) {
+	ch <- prometheus.MustNewConstMetric(
+		d.metrics["teltonika_mobile_signal_strength"],
+		prometheus.GaugeValue,
+		float64(modem.Rssi),
+		d.name, modem.ID,
+	)
 
-		ch <- prometheus.MustNewConstMetric(
-			d.metrics["teltonika_mobile_rsrq"],
-			prometheus.GaugeValue,
-			float64(sim.Rsrq),
-			d.name, sim.ID,
-		)
+	ch <- prometheus.MustNewConstMetric(
+		d.metrics["teltonika_mobile_rsrp"],
+		prometheus.GaugeValue,
+		float64(modem.Rsrp),
+		d.name, modem.ID,
+	)
 
-		ch <- prometheus.MustNewConstMetric(
-			d.metrics["teltonika_mobile_sinr"],
-			prometheus.GaugeValue,
-			float64(sim.Sinr),
-			d.name, sim.ID,
-		)
+	ch <- prometheus.MustNewConstMetric(
+		d.metrics["teltonika_mobile_rsrq"],
+		prometheus.GaugeValue,
+		float64(modem.Rsrq),
+		d.name, modem.ID,
+	)
 
-		ch <- prometheus.MustNewConstMetric(
-			d.metrics["teltonika_mobile_data_received"],
-			prometheus.GaugeValue,
-			float64(sim.Rxbytes),
-			d.name, sim.ID,
-		)
+	ch <- prometheus.MustNewConstMetric(
+		d.metrics["teltonika_mobile_sinr"],
+		prometheus.GaugeValue,
+		float64(modem.Sinr),
+		d.name, modem.ID,
+	)
 
-		ch <- prometheus.MustNewConstMetric(
-			d.metrics["teltonika_mobile_data_sent"],
-			prometheus.GaugeValue,
-			float64(sim.Txbytes),
-			d.name, sim.ID,
-		)
+	ch <- prometheus.MustNewConstMetric(
+		d.metrics["teltonika_mobile_data_received"],
+		prometheus.GaugeValue,
+		float64(modem.Rxbytes),
+		d.name, modem.ID,
+	)
 
-		ch <- prometheus.MustNewConstMetric(
-			d.metrics["teltonika_mobile_temperature"],
-			prometheus.GaugeValue,
-			float64(sim.Temperature),
-			d.name, sim.ID,
-		)
+	ch <- prometheus.MustNewConstMetric(
+		d.metrics["teltonika_mobile_data_sent"],
+		prometheus.GaugeValue,
+		float64(modem.Txbytes),
+		d.name, modem.ID,
+	)
 
-		inserted := 0.0
-		if strings.EqualFold(sim.Simstate, "inserted") {
-			inserted = 1
-		}
+	ch <- prometheus.MustNewConstMetric(
+		d.metrics["teltonika_mobile_temperature"],
+		prometheus.GaugeValue,
+		float64(modem.Temperature),
+		d.name, modem.ID,
+	)
+
+	inserted := 0.0
+	if strings.EqualFold(modem.Simstate, "inserted") {
+		inserted = 1
+	}
+	ch <- prometheus.MustNewConstMetric(
+		d.metrics["teltonika_mobile_connected"],
+		prometheus.GaugeValue,
+		inserted,
+		d.name, modem.ID,
+	)
+
+	if modem.SignalQuality.Valid {
 		ch <- prometheus.MustNewConstMetric(
-			d.metrics["teltonika_mobile_connected"],
+			d.metrics["teltonika_mobile_signal_quality"],
 			prometheus.GaugeValue,
-			inserted,
-			d.name, sim.ID,
+			modem.SignalQuality.Value,
+			d.name, modem.ID,
 		)
 	}
+
+	if ntype := strings.TrimSpace(modem.Ntype); ntype != "" {
+		ch <- prometheus.MustNewConstMetric(
+			d.metrics["teltonika_mobile_network_type"],
+			prometheus.GaugeValue,
+			1,
+			d.name, modem.ID, ntype,
+		)
+	}
+}
+
+// exportModemCarriers exports one set of metrics per aggregated carrier the
+// modem currently uses. Carriers come and go, so their presence is exported as
+// teltonika_mobile_carrier_active rather than encoded into a single stateful
+// series; series of carriers that are no longer aggregated simply stop being
+// emitted. Carriers without a band, and duplicate bands - which would produce a
+// duplicate label set and make the whole scrape fail - are skipped.
+func (d *Device) exportModemCarriers(ch chan<- prometheus.Metric, modem ModemStatus) {
+	exported := make(map[string]struct{}, len(modem.CaSignal))
+
+	for _, carrier := range modem.CaSignal {
+		band := strings.TrimSpace(carrier.Band)
+		if band == "" {
+			slog.Debug("skipping carrier without a band", "host", d.host, "modem", modem.ID)
+			continue
+		}
+
+		if _, duplicate := exported[band]; duplicate {
+			slog.Debug("skipping duplicate carrier band", "host", d.host, "modem", modem.ID, "band", band)
+			continue
+		}
+		exported[band] = struct{}{}
+
+		enriched := enrichCarrier(carrier, modem.CellInfo)
+
+		ch <- prometheus.MustNewConstMetric(
+			d.metrics["teltonika_mobile_carrier_active"],
+			prometheus.GaugeValue,
+			1,
+			d.name, modem.ID, band, strconv.FormatBool(carrier.Primary),
+		)
+
+		d.exportCarrierValue(ch, "teltonika_mobile_carrier_rsrp", modem.ID, band, enriched.Rsrp)
+		d.exportCarrierValue(ch, "teltonika_mobile_carrier_rsrq", modem.ID, band, enriched.Rsrq)
+		d.exportCarrierValue(ch, "teltonika_mobile_carrier_sinr", modem.ID, band, enriched.Sinr)
+		d.exportCarrierValue(ch, "teltonika_mobile_carrier_rssi", modem.ID, band, enriched.Rssi)
+		d.exportCarrierValue(ch, "teltonika_mobile_carrier_bandwidth_mhz", modem.ID, band, enriched.Bandwidth)
+	}
+}
+
+// exportCarrierValue emits a single per-carrier gauge identified by metric, or
+// nothing at all when the modem did not report the value. Skipping is
+// deliberate: 0 is a legitimate SINR and would be indistinguishable from a
+// missing reading.
+func (d *Device) exportCarrierValue(
+	ch chan<- prometheus.Metric,
+	metric, modemID, band string,
+	value OptionalNumber,
+) {
+	if !value.Valid {
+		return
+	}
+
+	ch <- prometheus.MustNewConstMetric(
+		d.metrics[metric],
+		prometheus.GaugeValue,
+		value.Value,
+		d.name, modemID, band,
+	)
+}
+
+// enrichCarrier fills in the readings that ca_signal[] left out from the
+// cell_info[] entry describing the same carrier, matched on its frequency
+// (earfcn for LTE, nr-arfcn for NR). On 5G NSA this is what makes the NR leg's
+// RSRP, RSRQ and SINR available at all, since ca_signal[] reports only its
+// band, frequency and bandwidth. The carrier is returned unchanged when no cell
+// matches.
+func enrichCarrier(carrier ModemCarrier, cells []ModemCell) ModemCarrier {
+	if !carrier.Frequency.Valid {
+		return carrier
+	}
+
+	for _, cell := range cells {
+		if !cellMatchesFrequency(cell, carrier.Frequency.Value) {
+			continue
+		}
+
+		carrier.Rsrp = firstReported(carrier.Rsrp, cell.Rsrp)
+		carrier.Rsrq = firstReported(carrier.Rsrq, cell.Rsrq)
+		carrier.Sinr = firstReported(carrier.Sinr, cell.Sinr)
+		carrier.Rssi = firstReported(carrier.Rssi, cell.Rssi)
+		carrier.Bandwidth = firstReported(carrier.Bandwidth, cell.Bandwidth)
+
+		break
+	}
+
+	return carrier
+}
+
+// cellMatchesFrequency reports whether cell describes the carrier sitting on
+// the given ARFCN. A cell carries either an LTE earfcn or an NR nr-arfcn, never
+// both, so the two are compared in turn.
+func cellMatchesFrequency(cell ModemCell, frequency float64) bool {
+	if cell.Earfcn.Valid && cell.Earfcn.Value == frequency {
+		return true
+	}
+
+	return cell.NrArfcn.Valid && cell.NrArfcn.Value == frequency
+}
+
+// firstReported returns preferred when it holds a value the device reported,
+// and falls back to alternative otherwise.
+func firstReported(preferred, alternative OptionalNumber) OptionalNumber {
+	if preferred.Valid {
+		return preferred
+	}
+
+	return alternative
 }
 
 func (d *Device) collectSystemDeviceUsageStatus(ch chan<- prometheus.Metric) {

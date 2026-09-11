@@ -399,14 +399,14 @@ func (d *Device) collectWirelessInterfacesStatus(ch chan<- prometheus.Metric) {
 
 			ch <- prometheus.MustNewConstMetric(
 				d.metrics["teltonika_wireless_device_airtime_time_busy"],
-				prometheus.GaugeValue,
+				prometheus.CounterValue,
 				float64(device.Airtime.TimeBusy),
 				d.name, ifName, radio,
 			)
 
 			ch <- prometheus.MustNewConstMetric(
 				d.metrics["teltonika_wireless_device_airtime_time"],
-				prometheus.GaugeValue,
+				prometheus.CounterValue,
 				float64(device.Airtime.Time),
 				d.name, ifName, radio,
 			)

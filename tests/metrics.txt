@@ -81,11 +81,11 @@ teltonika_wireless_client_signal{client="iphone",device="RUT007",radio="wifi_2.4
 teltonika_wireless_client_tx_rate{client="AA:BB:CC:DD:00:11",device="RUT007",radio="radio1"} 5.85e+08
 teltonika_wireless_client_tx_rate{client="iphone",device="RUT007",radio="wifi_2.4"} 9e+07
 # HELP teltonika_wireless_device_airtime_time Total airtime duration for the wireless device
-# TYPE teltonika_wireless_device_airtime_time gauge
+# TYPE teltonika_wireless_device_airtime_time counter
 teltonika_wireless_device_airtime_time{device="RUT007",interface="wlan0-1",radio="wifi_2.4"} 2.7481657e+08
 teltonika_wireless_device_airtime_time{device="RUT007",interface="wlan1-1",radio="radio1"} 2.74817648e+08
 # HELP teltonika_wireless_device_airtime_time_busy Duration of busy airtime for the wireless device
-# TYPE teltonika_wireless_device_airtime_time_busy gauge
+# TYPE teltonika_wireless_device_airtime_time_busy counter
 teltonika_wireless_device_airtime_time_busy{device="RUT007",interface="wlan0-1",radio="wifi_2.4"} 2.209566e+07
 teltonika_wireless_device_airtime_time_busy{device="RUT007",interface="wlan1-1",radio="radio1"} 3.7969218e+07
 # HELP teltonika_wireless_device_airtime_utilization Percentage of time the wireless device is actively transmitting or receiving data
